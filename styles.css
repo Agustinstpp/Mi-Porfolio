@@ -491,7 +491,7 @@ a {
 
 .admin-shell {
   min-height: 100vh;
-  background: var(--beige);
+  background: linear-gradient(rgba(247, 239, 223, 0.88), rgba(247, 239, 223, 0.88)), url("imag/foto%20oficina.PNG") center/cover no-repeat;
   padding: 40px 20px 80px;
 }
 
@@ -661,6 +661,12 @@ small {
 }
 
 @media (max-width: 768px) {
+  .nav-pill {
+    margin: 0 auto;
+    width: fit-content;
+    justify-content: center;
+  }
+
   .hero {
     padding: 20px;
   }
