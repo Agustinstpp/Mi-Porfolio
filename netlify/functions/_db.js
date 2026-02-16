@@ -84,10 +84,16 @@ const ensureSchema = async () => {
 
   const userResult = await pool.query("SELECT COUNT(*)::int AS count FROM users");
   if (userResult.rows[0].count === 0) {
-    const password = process.env.ADMIN_PASSWORD || "Namucura24";
+    const username = process.env.ADMIN_USER;
+    const password = process.env.ADMIN_PASSWORD;
+
+    if (!username || !password) {
+      return;
+    }
+
     const hash = bcrypt.hashSync(password, 10);
     await pool.query("INSERT INTO users (username, password) VALUES ($1, $2)", [
-      process.env.ADMIN_USER || "agusstop84@gmail.com",
+      username,
       hash,
     ]);
   }
