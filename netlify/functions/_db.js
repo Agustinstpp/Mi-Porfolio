@@ -1,7 +1,7 @@
 const { Pool } = require("@neondatabase/serverless");
 const bcrypt = require("bcryptjs");
 
-const pool = new Pool({ connectionString: process.env.NEON_DATABASE_URL });
+const pool = new Pool({ connectionString: process.env.NEON_DATABASE_URL || process.env.NETLIFY_DATABASE_URL });
 
 const seedPosts = [
   {
