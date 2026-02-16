@@ -1,0 +1,16 @@
+{
+  "name": "mi-porfolio",
+  "version": "1.0.0",
+  "description": "Portfolio con blog SQL y panel de admin",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.5",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

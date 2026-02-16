@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agustín Stoppello | Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-header">
+      <h1>Panel de Blog</h1>
+      <button id="logout" class="btn ghost">Cerrar sesión</button>
+    </header>
+
+    <section class="admin-card" id="login-card">
+      <h2>Iniciar sesión</h2>
+      <form id="login-form">
+        <label>
+          Usuario
+          <input type="text" name="username" required />
+        </label>
+        <label>
+          Contraseña
+          <input type="password" name="password" required />
+        </label>
+        <button class="btn" type="submit">Ingresar</button>
+      </form>
+      <p class="hint">Usuario y contraseña inicial: admin / admin123</p>
+    </section>
+
+    <section class="admin-card hidden" id="post-card">
+      <h2>Agregar nuevo trabajo</h2>
+      <form id="post-form">
+        <label>
+          Título
+          <input type="text" name="title" required />
+        </label>
+        <label>
+          Fecha
+          <input type="text" name="date" placeholder="February 16, 2026" required />
+        </label>
+        <label>
+          Ubicación
+          <input type="text" name="location" placeholder="Corrientes, Argentina" />
+        </label>
+        <label>
+          Imagen de portada
+          <select name="cover">
+            <option value="imag/Portada%20Smart%20Techs%20PC.jpg">Portada Smart Techs PC</option>
+            <option value="imag/Portada%20LlegaRapido%20PC.jpg">Portada LlegaRapido PC</option>
+            <option value="imag/Portada%20LlegaRapido%20Iphone.jpg">Portada LlegaRapido iPhone</option>
+            <option value="imag/PortadaLlegarapido.jpg">Portada LlegaRapido</option>
+            <option value="imag/Portada%20puerto%20del%20pirayu.jpg">Portada Puerto del Pirayu</option>
+            <option value="imag/Portada%20Sukha.jpg">Portada Sukha</option>
+          </select>
+        </label>
+        <label>
+          Extracto
+          <textarea name="excerpt" rows="3" required></textarea>
+        </label>
+        <label>
+          Contenido (HTML)
+          <textarea name="content" rows="8" required></textarea>
+        </label>
+        <label>
+          Slug (opcional)
+          <input type="text" name="slug" placeholder="mi-trabajo" />
+        </label>
+        <button class="btn" type="submit">Publicar</button>
+      </form>
+    </section>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>
