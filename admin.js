@@ -60,12 +60,21 @@ const checkSession = async () => {
 };
 
 // ===== LOGIN =====
-const loginForm = document.getElementById("login-form");
-const loginBtn = document.getElementById("login-btn");
+function initLoginHandler() {
+  const loginForm = document.getElementById("login-form");
+  const loginBtn = document.getElementById("login-btn");
 
-if (loginBtn) {
+  if (!loginBtn) {
+    console.error("Login button not found!");
+    return;
+  }
+
+  console.log("Login handler initialized");
+
   loginBtn.addEventListener("click", async (event) => {
     event.preventDefault();
+    console.log("Login button clicked");
+    
     const formData = new FormData(loginForm);
     const payload = Object.fromEntries(formData.entries());
 
@@ -308,7 +317,10 @@ const publishPost = async (postData, token) => {
 };
 
 // ===== INIT =====
-document.addEventListener("DOMContentLoaded", checkSession);
+document.addEventListener("DOMContentLoaded", () => {
+  checkSession();
+  initLoginHandler();
+});
 document.querySelectorAll(".admin-nav-item").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     e.preventDefault();
