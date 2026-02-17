@@ -576,7 +576,7 @@
       <div class="login-card-logo">🚀</div>
       <h2>Agustín Stoppello</h2>
       <p class="login-card-subtitle">Panel de Blog - Inicie sesión para continuar</p>
-      <form class="login-form" id="login-form">
+      <form class="login-form" id="login-form" onsubmit="return false;">
         <div class="form-group">
           <label>Correo electrónico</label>
           <input type="text" name="username" placeholder="usuario@ejemplo.com" required />
@@ -585,7 +585,7 @@
           <label>Contraseña</label>
           <input type="password" name="password" placeholder="••••••••" required />
         </div>
-        <button type="submit" class="btn-login">Iniciar Sesión</button>
+        <button type="button" class="btn-login" id="login-btn">Iniciar Sesión</button>
       </form>
     </div>
   </div>

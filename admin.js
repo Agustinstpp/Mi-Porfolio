@@ -61,8 +61,10 @@ const checkSession = async () => {
 
 // ===== LOGIN =====
 const loginForm = document.getElementById("login-form");
-if (loginForm) {
-  loginForm.addEventListener("submit", async (event) => {
+const loginBtn = document.getElementById("login-btn");
+
+if (loginBtn) {
+  loginBtn.addEventListener("click", async (event) => {
     event.preventDefault();
     const formData = new FormData(loginForm);
     const payload = Object.fromEntries(formData.entries());
