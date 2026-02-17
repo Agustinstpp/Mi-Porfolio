@@ -34,22 +34,42 @@
 
     <section class="admin-card hidden" id="post-card">
       <h2>Agregar nuevo trabajo</h2>
+      
+      <div id="preview-section" class="preview-section">
+        <h3>Vista previa</h3>
+        <div id="preview-cover" class="preview-cover">
+          <img id="preview-img" src="" alt="Portada" style="max-width: 100%; max-height: 300px; display: none;" />
+          <p id="preview-no-img" style="color: #999;">Sin imagen aún</p>
+        </div>
+        <h4 id="preview-title" style="margin-top: 16px; color: #333;"></h4>
+        <p id="preview-excerpt" style="color: #666; font-size: 12px;"></p>
+      </div>
+
       <form id="post-form">
         <label>
           Título
-          <input type="text" name="title" required />
+          <input type="text" name="title" id="input-title" required />
         </label>
+
         <label>
           Fecha
           <input type="text" name="date" placeholder="February 16, 2026" required />
         </label>
+
         <label>
           Ubicación
           <input type="text" name="location" placeholder="Corrientes, Argentina" />
         </label>
+
         <label>
-          Imagen de portada
-          <select name="cover">
+          Portada - Subir propia
+          <input type="file" name="cover-file" id="cover-file" accept="image/*" />
+        </label>
+
+        <label>
+          O seleccionar predefinida
+          <select name="cover" id="cover-select">
+            <option value="">-- Seleccionar --</option>
             <option value="imag/Portada%20Smart%20Techs%20PC.jpg">Portada Smart Techs PC</option>
             <option value="imag/Portada%20LlegaRapido%20PC.jpg">Portada LlegaRapido PC</option>
             <option value="imag/Portada%20LlegaRapido%20Iphone.jpg">Portada LlegaRapido iPhone</option>
@@ -58,18 +78,29 @@
             <option value="imag/Portada%20Sukha.jpg">Portada Sukha</option>
           </select>
         </label>
+
         <label>
           Extracto
-          <textarea name="excerpt" rows="3" required></textarea>
+          <textarea name="excerpt" id="input-excerpt" rows="3" required></textarea>
         </label>
+
         <label>
           Contenido (HTML)
-          <textarea name="content" rows="8" required></textarea>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-small" data-tag="<h4>" title="Subtítulo">H4</button>
+            <button type="button" class="btn-small" data-tag="<p>" title="Párrafo">Párrafo</button>
+            <button type="button" class="btn-small" data-insert-img title="Insertar imagen">IMG</button>
+            <button type="button" class="btn-small" data-tag="<strong>" title="Negrita">Negrita</strong></button>
+            <button type="button" class="btn-small" data-tag="<em>" title="Cursiva"><em>Cursiva</em></button>
+          </div>
+          <textarea name="content" id="input-content" rows="12" required placeholder="Usa los botones de arriba o escribe HTML directamente. Ej: &lt;p&gt;...&lt;/p&gt;"></textarea>
         </label>
+
         <label>
           Slug (opcional)
           <input type="text" name="slug" placeholder="mi-trabajo" />
         </label>
+
         <button class="btn" type="submit">Publicar</button>
       </form>
     </section>

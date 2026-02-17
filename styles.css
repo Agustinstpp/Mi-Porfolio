@@ -537,6 +537,48 @@ a {
   font-family: "Nunito", sans-serif;
 }
 
+.preview-section {
+  background: #f9f9f9;
+  border: 1px dashed #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.preview-section h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.preview-cover {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #e3e3e3;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-small {
+  background: #0a4bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-small:hover {
+  background: #0836c2;
+}
+
 .btn {
   background: #0a4bff;
   color: #fff;
