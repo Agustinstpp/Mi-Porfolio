@@ -87,6 +87,14 @@ function initLoginHandler() {
       });
       
       console.log("Response status:", res.status);
+      console.log("Response headers:", res.headers);
+      
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("Error response:", text);
+        alert(`Error ${res.status}: Servidor no disponible. Debes deployar en Netlify para que funcione.`);
+        return;
+      }
       
       const data = await res.json();
       console.log("Response data:", data);
@@ -102,7 +110,7 @@ function initLoginHandler() {
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Error al conectar: " + error.message);
+      alert("Error: Las funciones de Netlify no están disponibles localmente. Debes subir a Netlify para probar el login.");
     }
   });
 }
@@ -339,95 +347,86 @@ document.addEventListener("DOMContentLoaded", () => {
       showAdmin(false);
     });
   }
-});
-
-// Preview de imagen
-const coverFile = document.getElementById("cover-file");
-coverFile.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const previewImg = document.getElementById("preview-img");
-      previewImg.src = event.target.result;
-      previewImg.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Botones toolbar
-document.querySelectorAll(".tool-btn[data-tag]").forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    const tag = btn.dataset.tag;
-    const textarea = document.getElementById("input-content");
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = textarea.value.substring(start, end);
-    const newText =
-      textarea.value.substring(0, start) +
-      `<${tag}>` + (selectedText || "tu contenido") + `</${tag}>` +
-      textarea.value.substring(end);
-    textarea.value = newText;
-    textarea.focus();
-  });
-});
-
-document.querySelector(".tool-btn[data-insert-img]").addEventListener("click", (e) => {
-  e.preventDefault();
-  const imageUrl = prompt("Pega la URL de la imagen o ruta relativa (ej: imag/nombre.jpg):");
-  if (imageUrl) {
-    const textarea = document.getElementById("input-content");
-    const start = textarea.selectionStart;
-    const imgTag = `<img src="${imageUrl}" alt="Imagen" style="width: 100%; border-radius: 18px; margin: 20px 0;" />`;
-    const newText =
-      textarea.value.substring(0, start) +
-      imgTag +
-      textarea.value.substring(start);
-    textarea.value = newText;
-    textarea.focus();
-  }
-});
-
-// Enviar post
-const postForm = document.getElementById("post-form");
-postForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const formData = new FormData(postForm);
-  const payload = Object.fromEntries(formData.entries());
   
-  const coverFileInput = document.getElementById("cover-file");
-  if (coverFileInput.files.length > 0) {
-    const file = coverFileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = async () => {
-      payload.cover = reader.result;
-      await publishPost(payload);
-    };
-    reader.readAsDataURL(file);
-  } else {
-    await publishPost(payload);
+  // Post form submit
+  if (postForm) {
+    postForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const token = getToken();
+      if (!token) {
+        alert("Debes estar autenticado");
+        return;
+      }
+      
+      const formData = new FormData(postForm);
+      const payload = Object.fromEntries(formData.entries());
+      
+      const coverFileInput = document.getElementById("cover-file");
+      if (coverFileInput.files.length > 0) {
+        const file = coverFileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = async () => {
+          payload.cover = reader.result;
+          await publishPost(payload, token);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        await publishPost(payload, token);
+      }
+    });
+  }
+  
+  // Preview de imagen
+  const coverFile = document.getElementById("cover-file");
+  if (coverFile) {
+    coverFile.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const previewImg = document.getElementById("preview-img");
+          previewImg.src = event.target.result;
+          previewImg.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Botones toolbar
+  document.querySelectorAll(".tool-btn[data-tag]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const tag = btn.dataset.tag;
+      const textarea = document.getElementById("input-content");
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+      const newText =
+        textarea.value.substring(0, start) +
+        `<${tag}>` + (selectedText || "tu contenido") + `</${tag}>` +
+        textarea.value.substring(end);
+      textarea.value = newText;
+      textarea.focus();
+    });
+  });
+
+  const insertImgBtn = document.querySelector(".tool-btn[data-insert-img]");
+  if (insertImgBtn) {
+    insertImgBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const imageUrl = prompt("Pega la URL de la imagen o ruta relativa (ej: imag/nombre.jpg):");
+      if (imageUrl) {
+        const textarea = document.getElementById("input-content");
+        const start = textarea.selectionStart;
+        const imgTag = `<img src="${imageUrl}" alt="Imagen" style="width: 100%; border-radius: 18px; margin: 20px 0;" />`;
+        const newText =
+          textarea.value.substring(0, start) +
+          imgTag +
+          textarea.value.substring(start);
+        textarea.value = newText;
+        textarea.focus();
+      }
+    });
   }
 });
-
-const publishPost = async (payload) => {
-  const token = getToken();
-  const res = await fetch(`${API_BASE}/posts`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
-  });
-  const data = await res.json();
-  if (data.ok) {
-    alert("Publicado correctamente");
-    postForm.reset();
-    document.getElementById("preview-img").style.display = "none";
-    loadDashboard();
-  } else {
-    alert("No se pudo publicar");
-  }
-};
