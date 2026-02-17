@@ -49,73 +49,93 @@ loginForm.addEventListener("submit", async (event) => {
 
 // Navegación
 document.querySelectorAll(".admin-nav-item").forEach((btn) => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
     document.querySelectorAll(".admin-nav-item").forEach((b) => b.classList.remove("active"));
     document.querySelectorAll(".admin-section").forEach((s) => s.classList.remove("active"));
     btn.classList.add("active");
     const view = btn.dataset.view;
-    document.querySelector(`[data-view="${view}"]`).classList.add("active");
-    if (view === "posts") loadPosts();
-    if (view === "dashboard") loadDashboard();
+    const section = document.querySelector(`[data-view="${view}"]`);
+    if (section) {
+      section.classList.add("active");
+      if (view === "posts") loadPosts();
+      if (view === "dashboard") loadDashboard();
+    }
   });
 });
 
 // Cargar dashboard
 const loadDashboard = async () => {
+  console.log("Loading dashboard...");
   const token = getToken();
-  const res = await fetch(`${API_BASE}/posts`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  const data = await res.json();
-  const posts = data.posts || [];
-  
-  document.getElementById("stat-posts").textContent = posts.length;
-  document.getElementById("stat-views").textContent = posts.reduce((sum, p) => sum + (p.views || 0), 0);
-  document.getElementById("stat-likes").textContent = posts.reduce((sum, p) => sum + (p.likes || 0), 0);
-  
-  const dashboardList = document.getElementById("dashboard-posts-list");
-  dashboardList.innerHTML = posts.slice(0, 5).map(p => `
-    <div class="post-item">
-      <img src="${p.cover}" alt="${p.title}" class="post-item-img" />
-      <div class="post-item-info">
-        <h4 class="post-item-title">${p.title}</h4>
-        <div class="post-item-meta">
-          <span>👁️ ${p.views || 0} vistas</span>
-          <span>❤️ ${p.likes || 0} me gusta</span>
+  if (!token) return;
+  try {
+    const res = await fetch(`${API_BASE}/posts`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    const posts = data.posts || [];
+    
+    document.getElementById("stat-posts").textContent = posts.length;
+    document.getElementById("stat-views").textContent = posts.reduce((sum, p) => sum + (p.views || 0), 0);
+    document.getElementById("stat-likes").textContent = posts.reduce((sum, p) => sum + (p.likes || 0), 0);
+    
+    const dashboardList = document.getElementById("dashboard-posts-list");
+    if (dashboardList) {
+      dashboardList.innerHTML = posts.slice(0, 5).map(p => `
+        <div class="post-item">
+          <img src="${p.cover}" alt="${p.title}" class="post-item-img" />
+          <div class="post-item-info">
+            <h4 class="post-item-title">${p.title}</h4>
+            <div class="post-item-meta">
+              <span>👁️ ${p.views || 0} vistas</span>
+              <span>❤️ ${p.likes || 0} me gusta</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  `).join("");
+      `).join("");
+    }
+  } catch (e) {
+    console.error("Error loading dashboard:", e);
+  }
 };
 
 // Cargar posts
 const loadPosts = async () => {
+  console.log("Loading posts...");
   const token = getToken();
-  const res = await fetch(`${API_BASE}/posts`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  const data = await res.json();
-  const posts = data.posts || [];
-  
-  const postsList = document.getElementById("posts-list");
-  postsList.innerHTML = posts.map(p => `
-    <div class="post-item">
-      <img src="${p.cover}" alt="${p.title}" class="post-item-img" />
-      <div class="post-item-info">
-        <h4 class="post-item-title">${p.title}</h4>
-        <div class="post-item-meta">
-          <span>👁️ ${p.views || 0} vistas</span>
-          <span>❤️ ${p.likes || 0} me gusta</span>
-          <span>${p.date}</span>
+  if (!token) return;
+  try {
+    const res = await fetch(`${API_BASE}/posts`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    const posts = data.posts || [];
+    
+    const postsList = document.getElementById("posts-list");
+    if (postsList) {
+      postsList.innerHTML = posts.map(p => `
+        <div class="post-item">
+          <img src="${p.cover}" alt="${p.title}" class="post-item-img" />
+          <div class="post-item-info">
+            <h4 class="post-item-title">${p.title}</h4>
+            <div class="post-item-meta">
+              <span>👁️ ${p.views || 0} vistas</span>
+              <span>❤️ ${p.likes || 0} me gusta</span>
+              <span>${p.date}</span>
+            </div>
+          </div>
+          <div class="post-item-actions">
+            <button class="btn-icon" title="Ver">👁️</button>
+            <button class="btn-icon" title="Editar">✏️</button>
+            <button class="btn-icon" title="Eliminar">🗑️</button>
+          </div>
         </div>
-      </div>
-      <div class="post-item-actions">
-        <button class="btn-icon" title="Ver">👁️</button>
-        <button class="btn-icon" title="Editar">✏️</button>
-        <button class="btn-icon" title="Eliminar">🗑️</button>
-      </div>
-    </div>
-  `).join("");
+      `).join("");
+    }
+  } catch (e) {
+    console.error("Error loading posts:", e);
+  }
 };
 
 // Preview de imagen
