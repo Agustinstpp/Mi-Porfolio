@@ -67,24 +67,32 @@ if (loginForm) {
     const formData = new FormData(loginForm);
     const payload = Object.fromEntries(formData.entries());
 
+    console.log("Sending login request:", payload);
+
     try {
       const res = await fetch(`${API_BASE}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      
+      console.log("Response status:", res.status);
+      
       const data = await res.json();
+      console.log("Response data:", data);
+      
       if (data.ok && data.token) {
         setToken(data.token);
         showAdmin(true);
         loginForm.reset();
         loadDashboard();
       } else {
-        alert("Credenciales inválidas");
+        alert("Credenciales inválidas: " + (data.message || ""));
+        console.error("Login failed:", data);
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Error al conectar con el servidor");
+      alert("Error al conectar: " + error.message);
     }
   });
 }
