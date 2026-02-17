@@ -1,10 +1,9 @@
 const API_BASE = "/.netlify/functions";
 
-// ===== DOM ELEMENTS =====
-const loginSection = document.getElementById("login-section");
-const adminSection = document.getElementById("admin-section");
-const logoutBtn = document.getElementById("logout");
-const postForm = document.getElementById("post-form");
+console.log("admin.js loaded");
+
+// ===== DOM ELEMENTS ===== (se inicializan en DOMContentLoaded)
+let loginSection, adminSection, logoutBtn, postForm;
 
 // ===== LOCAL STORAGE =====
 const getToken = () => localStorage.getItem("adminToken");
@@ -107,22 +106,6 @@ function initLoginHandler() {
     }
   });
 }
-
-// ===== LOGOUT =====
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    clearToken();
-    showAdmin(false);
-  });
-}
-
-// ===== NAVIGATION BUTTONS =====
-document.querySelectorAll(".admin-nav-item").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const view = btn.dataset.view;
-    if (view) showSection(view);
-  });
-});
 
 // ===== DASHBOARD =====
 const loadDashboard = async () => {
@@ -318,23 +301,44 @@ const publishPost = async (postData, token) => {
 
 // ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM ready, initializing...");
+  
+  // Inicializar referencias a elementos del DOM
+  loginSection = document.getElementById("login-section");
+  adminSection = document.getElementById("admin-section");
+  logoutBtn = document.getElementById("logout");
+  postForm = document.getElementById("post-form");
+  
+  console.log("Elements found:", { loginSection, adminSection, logoutBtn, postForm });
+  
+  // Inicializar handlers
   checkSession();
   initLoginHandler();
-});
-document.querySelectorAll(".admin-nav-item").forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    document.querySelectorAll(".admin-nav-item").forEach((b) => b.classList.remove("active"));
-    document.querySelectorAll(".admin-section").forEach((s) => s.classList.remove("active"));
-    btn.classList.add("active");
-    const view = btn.dataset.view;
-    const section = document.querySelector(`[data-view="${view}"]`);
-    if (section) {
-      section.classList.add("active");
-      if (view === "posts") loadPosts();
-      if (view === "dashboard") loadDashboard();
-    }
+  
+  // Navigation buttons
+  document.querySelectorAll(".admin-nav-item").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.querySelectorAll(".admin-nav-item").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".admin-section").forEach((s) => s.classList.remove("active"));
+      btn.classList.add("active");
+      const view = btn.dataset.view;
+      const section = document.querySelector(`[data-view="${view}"]`);
+      if (section) {
+        section.classList.add("active");
+        if (view === "posts") loadPosts();
+        if (view === "dashboard") loadDashboard();
+      }
+    });
   });
+  
+  // Logout button
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      clearToken();
+      showAdmin(false);
+    });
+  }
 });
 
 // Preview de imagen
@@ -427,10 +431,3 @@ const publishPost = async (payload) => {
     alert("No se pudo publicar");
   }
 };
-
-logoutBtn.addEventListener("click", () => {
-  clearToken();
-  showAdmin(false);
-});
-
-checkSession();
