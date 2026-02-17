@@ -3,108 +3,450 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agustín Stoppello | Admin</title>
+  <title>Agustín Stoppello | Blog Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="imag/logo%20propio.PNG" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-dashboard {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+      background: #f5f5f5;
+    }
+
+    .admin-sidebar {
+      background: #fff;
+      padding: 24px;
+      border-right: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .admin-header h2 {
+      font-size: 18px;
+      color: #0a4bff;
+      margin: 0;
+    }
+
+    .admin-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .admin-nav-item {
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      text-align: left;
+      color: #333;
+    }
+
+    .admin-nav-item:hover {
+      background: #f0f0f0;
+    }
+
+    .admin-nav-item.active {
+      background: #0a4bff;
+      color: #fff;
+    }
+
+    .admin-content {
+      padding: 32px;
+      overflow-y: auto;
+    }
+
+    .admin-section {
+      display: none;
+    }
+
+    .admin-section.active {
+      display: block;
+    }
+
+    .admin-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .admin-card-header h1 {
+      font-size: 28px;
+      color: #333;
+      margin: 0;
+    }
+
+    .logout-btn {
+      background: #ff4444;
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .logout-btn:hover {
+      background: #dd0000;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-card-label {
+      font-size: 12px;
+      color: #999;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-card-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #0a4bff;
+    }
+
+    .posts-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .post-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .post-item-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #f0f0f0;
+    }
+
+    .post-item-info {
+      flex: 1;
+    }
+
+    .post-item-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .post-item-meta {
+      font-size: 11px;
+      color: #999;
+      display: flex;
+      gap: 12px;
+    }
+
+    .post-item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid #eee;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: #f0f0f0;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      background: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .toolbar-group {
+      display: flex;
+      gap: 4px;
+      border-right: 1px solid #eee;
+      padding-right: 8px;
+    }
+
+    .toolbar-group:last-child {
+      border-right: none;
+    }
+
+    .tool-btn {
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .tool-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .login-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .login-card h2 {
+      text-align: center;
+      margin-bottom: 32px;
+      color: #333;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: "Nunito", sans-serif;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0a4bff;
+      box-shadow: 0 0 0 3px rgba(10, 75, 255, 0.1);
+    }
+
+    .btn-login {
+      background: #0a4bff;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover {
+      background: #0836c2;
+    }
+
+    @media (max-width: 768px) {
+      .admin-dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-sidebar {
+        display: none;
+      }
+
+      .admin-content {
+        padding: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="admin-shell">
-    <header class="admin-header">
-      <h1>Panel de Blog</h1>
-      <button id="logout" class="btn ghost">Cerrar sesión</button>
-    </header>
-
-    <section class="admin-card" id="login-card">
-      <h2>Iniciar sesión</h2>
-      <form id="login-form">
-        <label>
-          Usuario
+  <div id="login-section" class="login-page">
+    <div class="login-card">
+      <h2>Panel de Blog</h2>
+      <form class="login-form" id="login-form">
+        <div class="form-group">
+          <label>Usuario</label>
           <input type="text" name="username" required />
-        </label>
-        <label>
-          Contraseña
-          <input type="password" name="password" required />
-        </label>
-        <button class="btn" type="submit">Ingresar</button>
-      </form>
-    </section>
-
-    <section class="admin-card hidden" id="post-card">
-      <h2>Agregar nuevo trabajo</h2>
-      
-      <div id="preview-section" class="preview-section">
-        <h3>Vista previa</h3>
-        <div id="preview-cover" class="preview-cover">
-          <img id="preview-img" src="" alt="Portada" style="max-width: 100%; max-height: 300px; display: none;" />
-          <p id="preview-no-img" style="color: #999;">Sin imagen aún</p>
         </div>
-        <h4 id="preview-title" style="margin-top: 16px; color: #333;"></h4>
-        <p id="preview-excerpt" style="color: #666; font-size: 12px;"></p>
-      </div>
-
-      <form id="post-form">
-        <label>
-          Título
-          <input type="text" name="title" id="input-title" required />
-        </label>
-
-        <label>
-          Fecha
-          <input type="text" name="date" placeholder="February 16, 2026" required />
-        </label>
-
-        <label>
-          Ubicación
-          <input type="text" name="location" placeholder="Corrientes, Argentina" />
-        </label>
-
-        <label>
-          Portada - Subir propia
-          <input type="file" name="cover-file" id="cover-file" accept="image/*" />
-        </label>
-
-        <label>
-          O seleccionar predefinida
-          <select name="cover" id="cover-select">
-            <option value="">-- Seleccionar --</option>
-            <option value="imag/Portada%20Smart%20Techs%20PC.jpg">Portada Smart Techs PC</option>
-            <option value="imag/Portada%20LlegaRapido%20PC.jpg">Portada LlegaRapido PC</option>
-            <option value="imag/Portada%20LlegaRapido%20Iphone.jpg">Portada LlegaRapido iPhone</option>
-            <option value="imag/PortadaLlegarapido.jpg">Portada LlegaRapido</option>
-            <option value="imag/Portada%20puerto%20del%20pirayu.jpg">Portada Puerto del Pirayu</option>
-            <option value="imag/Portada%20Sukha.jpg">Portada Sukha</option>
-          </select>
-        </label>
-
-        <label>
-          Extracto
-          <textarea name="excerpt" id="input-excerpt" rows="3" required></textarea>
-        </label>
-
-        <label>
-          Contenido (HTML)
-          <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
-            <button type="button" class="btn-small" data-tag="<h4>" title="Subtítulo">H4</button>
-            <button type="button" class="btn-small" data-tag="<p>" title="Párrafo">Párrafo</button>
-            <button type="button" class="btn-small" data-insert-img title="Insertar imagen">IMG</button>
-            <button type="button" class="btn-small" data-tag="<strong>" title="Negrita">Negrita</strong></button>
-            <button type="button" class="btn-small" data-tag="<em>" title="Cursiva"><em>Cursiva</em></button>
-          </div>
-          <textarea name="content" id="input-content" rows="12" required placeholder="Usa los botones de arriba o escribe HTML directamente. Ej: &lt;p&gt;...&lt;/p&gt;"></textarea>
-        </label>
-
-        <label>
-          Slug (opcional)
-          <input type="text" name="slug" placeholder="mi-trabajo" />
-        </label>
-
-        <button class="btn" type="submit">Publicar</button>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" name="password" required />
+        </div>
+        <button type="submit" class="btn-login">Entrar</button>
       </form>
-    </section>
+    </div>
   </div>
+
+  <div id="admin-section" class="admin-dashboard" style="display: none;">
+    <aside class="admin-sidebar">
+      <div class="admin-header">
+        <div>
+          <h2>Panel</h2>
+        </div>
+      </div>
+      <nav class="admin-nav">
+        <button class="admin-nav-item active" data-view="dashboard">📊 Dashboard</button>
+        <button class="admin-nav-item" data-view="posts">📝 Posts</button>
+        <button class="admin-nav-item" data-view="create">✏️ Nuevo Post</button>
+      </nav>
+      <button id="logout" class="logout-btn" style="width: 100%; margin-top: 24px;">Cerrar sesión</button>
+    </aside>
+
+    <main class="admin-content">
+      <!-- Dashboard -->
+      <section class="admin-section active" data-view="dashboard">
+        <div class="admin-card-header">
+          <h1>Dashboard</h1>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-label">Total de Posts</div>
+            <div class="stat-card-value" id="stat-posts">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Vistas Totales</div>
+            <div class="stat-card-value" id="stat-views">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Me Gusta Totales</div>
+            <div class="stat-card-value" id="stat-likes">0</div>
+          </div>
+        </div>
+        <h3>Posts Recientes</h3>
+        <div class="posts-list" id="dashboard-posts-list"></div>
+      </section>
+
+      <!-- Posts -->
+      <section class="admin-section" data-view="posts">
+        <div class="admin-card-header">
+          <h1>Mis Posts</h1>
+        </div>
+        <div class="posts-list" id="posts-list"></div>
+      </section>
+
+      <!-- Crear Post -->
+      <section class="admin-section" data-view="create">
+        <div class="admin-card-header">
+          <h1>Nuevo Post</h1>
+        </div>
+        <form id="post-form" style="max-width: 800px;">
+          <div style="display: grid; gap: 16px;">
+            <div style="display: grid; gap: 6px;">
+              <label style="font-weight: 700; font-size: 13px;">Título</label>
+              <input type="text" name="title" id="input-title" required style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;" />
+            </div>
+
+            <div style="display: grid; gap: 6px;">
+              <label style="font-weight: 700; font-size: 13px;">Portada</label>
+              <input type="file" name="cover-file" id="cover-file" accept="image/*" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;" />
+              <img id="preview-img" src="" alt="Portada" style="width: 100%; max-height: 300px; border-radius: 8px; display: none; margin-top: 12px;" />
+            </div>
+
+            <div style="display: grid; gap: 6px;">
+              <label style="font-weight: 700; font-size: 13px;">Fecha</label>
+              <input type="text" name="date" placeholder="February 16, 2026" required style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;" />
+            </div>
+
+            <div style="display: grid; gap: 6px;">
+              <label style="font-weight: 700; font-size: 13px;">Ubicación</label>
+              <input type="text" name="location" placeholder="Corrientes, Argentina" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;" />
+            </div>
+
+            <div style="display: grid; gap: 6px;">
+              <label style="font-weight: 700; font-size: 13px;">Extracto</label>
+              <textarea name="excerpt" rows="3" required style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Nunito', sans-serif;"></textarea>
+            </div>
+
+            <div style="display: grid; gap: 6px;">
+              <label style="font-weight: 700; font-size: 13px;">Contenido (HTML)</label>
+              <div class="editor-toolbar">
+                <div class="toolbar-group">
+                  <button type="button" class="tool-btn" data-tag="h4">H4</button>
+                  <button type="button" class="tool-btn" data-tag="p">Párrafo</button>
+                  <button type="button" class="tool-btn" data-tag="strong">Bold</button>
+                  <button type="button" class="tool-btn" data-tag="em">Italic</button>
+                </div>
+                <div class="toolbar-group">
+                  <button type="button" class="tool-btn" data-insert-img>🖼️ Imagen</button>
+                </div>
+              </div>
+              <textarea name="content" id="input-content" rows="14" required style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Nunito', sans-serif;"></textarea>
+            </div>
+
+            <div style="display: grid; gap: 6px;">
+              <label style="font-weight: 700; font-size: 13px;">Slug (opcional)</label>
+              <input type="text" name="slug" placeholder="mi-trabajo" style="padding: 12px; border: 1px solid #ddd; border-radius: 8px;" />
+            </div>
+
+            <button type="submit" class="btn" style="padding: 12px; background: #0a4bff; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">Publicar</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+
   <script src="admin.js"></script>
 </body>
 </html>

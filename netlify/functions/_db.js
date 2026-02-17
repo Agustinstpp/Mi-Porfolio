@@ -70,7 +70,9 @@ const ensureSchema = async () => {
       excerpt TEXT,
       cover TEXT,
       content TEXT,
-      slug TEXT UNIQUE
+      slug TEXT UNIQUE,
+      views INT DEFAULT 0,
+      likes INT DEFAULT 0
     )`
   );
 
